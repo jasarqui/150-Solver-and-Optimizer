@@ -1,44 +1,70 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a Solver for Quadratic Spline Interpolation, Polynomial Regression, and Simplex Minimization which is made as a requirement fro CMSC150 (Numerical and Symbolic Computation)
 
-## Available Scripts
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Dependencies](#dependencies)
+- [Development](#development)
+- [File Structure](#file-structure)
+- [Bugs and Feedback](#bugs-and-feedback)
+- [About the Developers](#about-the-developers)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Dependencies
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+The application requires the following installed for development:
 
-### `npm test`
+* `NodeJS` framework (version 10.13.0 above)
+* `flask` library (version 1.0.2)
+* `yarn` CLI (optional, version 1.12.3)
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Clone the [application](https://github.com/jasarqui/150-Solver-and-Optimizer) and then run `npm install` or `yarn add`. This will set up the remaining dependencies needed by the application to run.
 
-### `npm run build`
+## Development
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+When developing the app, open two terminals that will open the cloned folder. Run `npm start` or `yarn start` to start the web app, and `npm flask-start` or `yarn flask-start` to start the solver modules. Once the application loads, you can start developing.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+It is also important to note that everytime you make a change to the code of the application, `create-react-app` already has a module that updates itself through `react-scripts` so you get all the new updates automatically.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## File Structure
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The folders are implemented as follows (once all dependencies have been installed):
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<strong>Client</strong>
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+drone-image-client/
+  node_modules/
+  public/
+    dia-logo.png
+    index.html
+    manifest.json
+  src/
+    api/
+      entities/
+        ...<entity>.js
+      index.js
+    app/
+      App.js
+    assets/
+      ...<asset>
+      index.css
+    components/
+      ...<component>/
+    index.js
+    registerServiceWorker.js
+  package.json
+  README.md
+  yarn.lock
+  .gitignore
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Bugs and Feedback
 
-## Learn More
+If there are any bugs or feedback that concerns the project, go to the ([issues](hhttps://github.com/jasarqui/150-Solver-and-Optimizer/issues) tab.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## About the Developer
+
+This web application is made by [Jasper Arquilita](https://github.com/jasarqui), a student from University of the Philippines Los Baños.
