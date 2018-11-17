@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # remove pycache
-/pycache
+/src/solvers/__pycache__
