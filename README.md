@@ -34,30 +34,32 @@ The folders are implemented as follows (once all dependencies have been installe
 <strong>Client</strong>
 
 ```
-drone-image-client/
-  node_modules/
-  public/
-    dia-logo.png
-    index.html
-    manifest.json
-  src/
-    api/
-      entities/
-        ...<entity>.js
-      index.js
-    app/
-      App.js
-    assets/
-      ...<asset>
-      index.css
-    components/
-      ...<component>/
-    index.js
-    registerServiceWorker.js
-  package.json
-  README.md
-  yarn.lock
-  .gitignore
+150-Solver-and-Optimizer/
+    node_modules/
+    public/
+        index.html
+        manifest.json
+    src/
+        app/
+            App.js
+        assets/
+            css/
+            index.css
+        solvers/
+            helper/
+            poly-reg/
+            qsi/
+            simplex/
+            cors.py
+            index.py
+        ui/
+            ..<components>
+        index.js
+        serviceWorker.js
+    .gitignore
+    package.json
+    README.md
+    yarn.lock
 ```
 
 ## Bugs and Feedback
