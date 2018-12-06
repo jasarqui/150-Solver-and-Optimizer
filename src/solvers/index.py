@@ -9,6 +9,6 @@ app = Flask(__name__)
 def hello(num):
     return jsonify(returnthis = num)
 
-# so that this our app will only run when called
+# so that our app will only run when called
 if __name__ == "__main__":
     app.run()
