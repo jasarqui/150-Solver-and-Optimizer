@@ -17,7 +17,7 @@ def GaussJordan(matrix):
       # print(i)
       # Get max in column with row:
       # https://stackoverflow.com/questions/44620467/select-maximum-element-in-numpy-column-and-also-get-its-row
-      max_per_col = np.vstack([matrix[i:,:], abs(matrix[i:,:])]).argmax(axis=0) % (max_rows - i)
+      max_per_col = np.vstack([matrix[i:,:], abs(matrix[i:,:])]).argmax(axis=0) % (max_iterations - i)
       max_row = i + max_per_col[i]
       # swap row i with the row with the max value
       matrix[[i, max_row]] = matrix[[max_row, i]]

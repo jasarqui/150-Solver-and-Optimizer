@@ -10,9 +10,15 @@ from gauss_jordan import *
 # y = np.array([2, 8, 14])
 # x = np.array([3, 4.5, 7, 9])
 # y = np.array([2.5, 1, 2.5, 0.5])
+# x = np.array([-1,0,1])
+# y = np.array([0,-0.5,3])
 
+# this gets the functions from each interval between points
 def QuadSplineInterpol(x, y):
     if x.shape[0] > 2:
+        # parse params as numpy arrays
+        x, y = np.array(x), np.array(y)
+
         data_pts = x.shape[0] # n + 1 data points
         intervals = data_pts - 1 # n intervals
 
