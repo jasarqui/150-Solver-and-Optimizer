@@ -2,13 +2,6 @@ import React, { Component } from "react";
 import Title from "react-document-title";
 import { Button, Container } from "semantic-ui-react";
 
-// declare constants
-const constants = {
-  HOME: "home",
-  GENSOLVER: "solver",
-  SIMPLEX: "simplex"
-};
-
 // create styles here
 const style = {
   Head: {

@@ -3,6 +3,8 @@ import Home from "../ui/Home";
 import GenSolvers from "../ui/GenSolvers";
 import Simplex from "../ui/Simplex";
 import Error404 from "../ui/Error404";
+import Main from '../ui/components/Main';
+import Alert from 'react-s-alert';
 
 // declare constants
 const constants = {
@@ -18,6 +20,15 @@ class App extends Component {
     // set states
     this.state = { page: constants.HOME };
   }
+
+  componentDidMount = () => {
+    Alert.success(<center style={{fontSize: '15px'}}><strong>Welcome, user. Check out these amazing tools!</strong></center>, {
+      beep: false,
+      position: "top",
+      effect: "stackslide",
+      timeout: 2000
+    });
+  };
 
   // will change current webpage
   changePage = page_num => {
@@ -45,6 +56,7 @@ class App extends Component {
             {...{ clickButton: this.clickButtonu, constants: constants }}
           />
         )}
+        <Main />
       </div>
     );
   }

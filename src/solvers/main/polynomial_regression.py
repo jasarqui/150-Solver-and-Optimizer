@@ -2,12 +2,13 @@ import numpy as np
 
 # get the helper function needed
 import sys
-sys.path.append('./../helper')
+# sys.path.append('./../helper')
+sys.path.append('src/solvers/helper')
 from gauss_jordan import *
 
 # sample data
-dependent = np.array([50,50,50,70,70,70,80,80,80,90,90,90,100,100,100])
-independent = np.array([3.3,2.8,2.9,2.3,2.6,2.1,2.5,2.9,2.4,3.0,3.1,2.8,3.3,3.5,3.0])
+# dependent = np.array([50,50,50,70,70,70,80,80,80,90,90,90,100,100,100])
+# independent = np.array([3.3,2.8,2.9,2.3,2.6,2.1,2.5,2.9,2.4,3.0,3.1,2.8,3.3,3.5,3.0])
 # speed = np.array([4,4,7,7,8,9,10,10,10,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,16,16,17,17,17,18,18,18,18,19,19,19,20,20,20,20,20,22,23,24,24,24,24,25])
 # dist = np.array([2,10,4,22,16,10,18,26,34,17,28,14,20,24,28,26,34,34,46,26,36,60,80,20,26,54,32,40,32,40,50,42,56,76,84,36,46,68,32,48,52,56,64,66,54,70,92,93,120,85])
 
@@ -44,4 +45,16 @@ def PolynomialRegression(x, y, degree):
     return GaussJordan(system)
   else: return None
 
-print(PolynomialRegression(dependent, independent, 6))
+# this evaluates the given x over a function
+def EvaluatePR(data, x):
+  # parse param as numpy array
+  data = np.array(data)
+  result = 0
+
+  # evaluate
+  for i in range(0, len(data)):
+    result += data[i] * (x ** i)
+
+  return result
+
+# print(PolynomialRegression(dependent, independent, 6))

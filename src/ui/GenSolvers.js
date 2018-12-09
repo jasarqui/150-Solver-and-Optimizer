@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import { Grid, Table, Button, Segment, Input, Label } from "semantic-ui-react";
 import Title from "react-document-title";
 import Dropzone from "react-dropzone";
+import Alert from "react-s-alert";
 import Papa from "papaparse";
-import axios from 'axios';
+import axios from "axios";
+
+// setup function plot
+window.d3 = require("d3");
+const functionPlot = require("function-plot");
 
 // create styles
 const styles = {
@@ -77,6 +82,7 @@ class GenSolvers extends Component {
       contents: [],
       pr_function: null,
       qsi_functions: [],
+      qsi_data: [],
       pr_degree: 0,
       pr_x: "",
       qsi_x: "",
@@ -103,14 +109,147 @@ class GenSolvers extends Component {
     });
   };
 
-  solvePR = degree => {};
+  solvePR = e => {
+    e.preventDefault();
+    axios
+      .get(`/solve/pr/${this.state.contents}&${this.state.pr_degree}`)
+      .then(result => {
+        this.setState({ pr_function: result.data.result });
+        // parse function to string
+        let function_string, i;
+        for (i = 0; i < this.state.contents.length; i++) {
+          if (i === 0) function_string = String(this.state.pr_function[i]);
+          else
+            function_string +=
+              "(" +
+              String(this.state.pr_function[i]) +
+              " * x ^ " +
+              String(i) +
+              ")";
+          if (i !== this.state.contents.length - 1) function_string += " + ";
+        }
+
+        // plot
+        functionPlot({
+          target: "#polyplot",
+          disableZoom: false,
+          height: "400",
+          xAxis: {
+            domain: [
+              this.state.contents[0][0],
+              this.state.contents[this.state.contents.length - 1][0]
+            ]
+          },
+          data: [
+            {
+              fn: function_string,
+              nSamples: 1000,
+              graphType: "polyline"
+            }
+          ]
+        });
+      });
+  };
+
+  evaluatePR = e => {
+    e.preventDefault();
+    axios
+      .get(`/eval/pr/${this.state.pr_function}&${this.state.pr_x}`)
+      .then(result => {
+        this.setState({ pr_y: result.data.result });
+      });
+  };
+
+  solveQSI = e => {
+    e.preventDefault();
+    axios.get(`/solve/qsi/${this.state.contents}`).then(result => {
+      result.data.result
+        ? this.setState(
+            {
+              qsi_functions: result.data.result,
+              qsi_data: this.state.contents
+            },
+            () => {
+              let function_strings = [];
+              let i;
+
+              // parse functions
+              for (i = 0; i < this.state.qsi_functions.length; i++) {
+                let function_string =
+                  "(" +
+                  String(this.state.qsi_functions[i][0]) +
+                  "* x ^ 2) + (" +
+                  String(this.state.qsi_functions[i][1]) +
+                  "* x) + " +
+                  this.state.qsi_functions[i][2];
+                function_strings.push({
+                  fn: function_string,
+                  nSamples: 1000,
+                  graphType: "polyline",
+                  range: [
+                    this.state.qsi_data[i][0],
+                    this.state.qsi_data[i + 1][0]
+                  ]
+                });
+              }
+
+              // plot
+              functionPlot({
+                target: "#qsiplot",
+                disableZoom: false,
+                height: "400",
+                xAxis: {
+                  domain: [
+                    this.state.contents[0][0],
+                    this.state.contents[this.state.contents.length - 1][0]
+                  ]
+                },
+                data: function_strings
+              });
+            }
+          )
+        : Alert.error("Invalid Data.", {
+            beep: false,
+            position: "top-right",
+            effect: "stackslide",
+            timeout: 2000
+          });
+    });
+  };
+
+  evaluateQSI = e => {
+    e.preventDefault();
+    axios
+      .get(
+        `/eval/qsi/${this.state.qsi_functions}&${this.state.qsi_data}&${
+          this.state.qsi_x
+        }`
+      )
+      .then(result => {
+        this.setState({ qsi_y: result.data.result });
+      });
+  };
 
   readCSV = file => {
     var reader = new FileReader();
     // callback fxn for parsing csv
     reader.onload = e => {
+      var reader_content = Papa.parse(reader.result, { delimeter: "," }).data;
+
+      // sort content
+      reader_content.sort(sortFunction);
+      function sortFunction(a, b) {
+        if (a[0] === b[0]) {
+          // if same do nothing
+          return 0;
+        } else {
+          // else swap
+          return a[0] < b[0] ? -1 : 1;
+        }
+      }
+
       this.setState({
-        contents: Papa.parse(reader.result, { delimeter: "," }).data
+        contents: reader_content
       });
     }; // read the file
     reader.readAsText(file[0]);
@@ -227,6 +366,7 @@ class GenSolvers extends Component {
                                 ? false
                                 : true
                             }
+                            onClick={this.solvePR}
                           >
                             Solve
                           </Button>
@@ -235,12 +375,31 @@ class GenSolvers extends Component {
                       <Segment style={styles.FunctionSegment}>
                         {this.state.pr_function ? (
                           <div>
-                            {this.state.pr_function}
+                            {this.state.pr_function.map((coeff, id) => {
+                              return (
+                                <text>
+                                  {Math.round((coeff + 0.00001) * 10000) /
+                                    10000}
+                                  {id === 0 ? (
+                                    " + "
+                                  ) : (
+                                    <text>
+                                      {" * x"}
+                                      <sup>{id}</sup>
+                                      {id !== this.state.pr_function.length - 1
+                                        ? " + "
+                                        : ""}
+                                    </text>
+                                  )}
+                                </text>
+                              );
+                            })}
                             <Input
                               labelPosition="right"
                               type="text"
                               placeholder="x"
                               size="mini"
+                              style={{ marginTop: "10px" }}
                             >
                               <Label basic>f(</Label>
                               <input
@@ -249,12 +408,21 @@ class GenSolvers extends Component {
                               />
                               <Label basic>)</Label>
                               <Button
-                                disabled={this.state.pr_function ? false : true}
+                                disabled={
+                                  this.state.pr_function && this.state.pr_x
+                                    ? false
+                                    : true
+                                }
+                                onClick={this.evaluatePR}
                               >
                                 Evaluate
                               </Button>
                               {this.state.pr_y ? (
-                                <Label pointing="left">{this.state.pr_y}</Label>
+                                <Label pointing="left">
+                                  {Math.round(
+                                    (this.state.pr_y + 0.00001) * 10000
+                                  ) / 10000}
+                                </Label>
                               ) : (
                                 <div />
                               )}
@@ -265,7 +433,9 @@ class GenSolvers extends Component {
                         )}
                       </Segment>
                     </Grid.Column>
-                    <Grid.Column width={8}>Plot here</Grid.Column>
+                    <Grid.Column width={8}>
+                      <div id="polyplot" />
+                    </Grid.Column>
                   </Grid.Row>
                   <Grid.Row style={{ padding: "10px" }}>
                     <Grid.Column width={8}>
@@ -281,6 +451,7 @@ class GenSolvers extends Component {
                           disabled={
                             this.state.contents.length > 2 ? false : true
                           }
+                          onClick={this.solveQSI}
                         >
                           Interpolate
                         </Button>
@@ -288,7 +459,27 @@ class GenSolvers extends Component {
                       <Segment style={styles.FunctionSegment}>
                         {this.state.qsi_functions.length > 0 ? (
                           <div>
-                            {this.state.qsi_function}
+                            {this.state.qsi_functions.map((func, id) => {
+                              return (
+                                <p key={id}>
+                                  {"["}
+                                  {this.state.contents[id][0]}
+                                  {", "}
+                                  {this.state.contents[id + 1][0]}
+                                  {") => "}
+                                  {Math.round((func[0] + 0.00001) * 10000) /
+                                    10000}
+                                  {" * x"}
+                                  <sup>2</sup>
+                                  {" + "}
+                                  {Math.round((func[1] + 0.00001) * 10000) /
+                                    10000}
+                                  {" * x + "}
+                                  {Math.round((func[2] + 0.00001) * 10000) /
+                                    10000}
+                                </p>
+                              );
+                            })}
                             <Input
                               labelPosition="right"
                               type="text"
@@ -303,14 +494,25 @@ class GenSolvers extends Component {
                               <Label basic>)</Label>
                               <Button
                                 disabled={
-                                  this.state.qsi_function ? false : true
+                                  this.state.qsi_functions.length > 0 &&
+                                  this.state.qsi_x >=
+                                    this.state.qsi_data[0][0] &&
+                                  this.state.qsi_data <=
+                                    this.state.qsi_data[
+                                      this.state.qsi_data.length - 1
+                                    ][0]
+                                    ? false
+                                    : true
                                 }
+                                onClick={this.evaluateQSI}
                               >
                                 Evaluate
                               </Button>
                               {this.state.qsi_y ? (
                                 <Label pointing="left">
-                                  {this.state.qsi_y}
+                                  {Math.round(
+                                    (this.state.qsi_y + 0.00001) * 10000
+                                  ) / 10000}
                                 </Label>
                               ) : (
                                 <div />
@@ -322,7 +524,9 @@ class GenSolvers extends Component {
                         )}
                       </Segment>
                     </Grid.Column>
-                    <Grid.Column width={8}>Plot here</Grid.Column>
+                    <Grid.Column width={8}>
+                      <div id={"qsiplot"} />
+                    </Grid.Column>
                   </Grid.Row>
                 </Grid>
               </Grid.Column>

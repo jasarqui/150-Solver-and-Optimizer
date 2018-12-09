@@ -2,7 +2,8 @@ import numpy as np
 
 # get the helper function needed
 import sys
-sys.path.append('./../helper')
+# sys.path.append('./../helper')
+sys.path.append('src/solvers/helper')
 from gauss_jordan import *
 
 # sample data
@@ -71,7 +72,21 @@ def QuadSplineInterpol(x, y):
 
         # solve for the coefficients
         coefficients = GaussJordan(matrix)
-        return np.append(0, coefficients)
+        return np.append(0, coefficients).reshape(-1,3)
     else: return None
+
+# this evaluates a given x over the different splines
+def EvaluateQSI(functions, intervals, x):
+    # find where x belongs
+    for i in range(0, len(intervals)):
+        if x >= intervals[i] and x < intervals[i+1]:
+            interval = i
+
+    # solve x in the given interval
+    result = 0
+    for i in range(0, len(functions[interval])):
+        result += functions[interval][i] * (x ** (2 - i))
+
+    return result
 
 # print(QuadSplineInterpol(x,y))
