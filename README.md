@@ -44,12 +44,12 @@ The folders are implemented as follows (once all dependencies have been installe
             App.js
         assets/
             css/
-            index.css
+            ...<image>.png
         solvers/
             helper/
-            poly-reg/
-            qsi/
-            simplex/
+                ...<helper>.py
+            main/
+                ...<solver>.py
             cors.py
             index.py
         ui/
