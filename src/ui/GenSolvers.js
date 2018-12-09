@@ -235,9 +235,14 @@ class GenSolvers extends Component {
     // callback fxn for parsing csv
     reader.onload = e => {
       var reader_content = Papa.parse(reader.result, { delimeter: "," }).data;
+      // convert to number
+      var result = reader_content.map(numbers => {
+        return numbers.map(Number);
+      });
+      console.log(result)
 
       // sort content
-      reader_content.sort(sortFunction);
+      result.sort(sortFunction);
       function sortFunction(a, b) {
         if (a[0] === b[0]) {
           // if same do nothing
@@ -249,7 +254,7 @@ class GenSolvers extends Component {
       }
 
       this.setState({
-        contents: reader_content
+        contents: result
       });
     }; // read the file
     reader.readAsText(file[0]);
@@ -449,7 +454,7 @@ class GenSolvers extends Component {
                       <div style={{ width: "100%", paddingBottom: "10px" }}>
                         <Button
                           disabled={
-                            this.state.contents.length > 2 ? false : true
+                            this.state.contents.length >= 2 ? false : true
                           }
                           onClick={this.solveQSI}
                         >
@@ -508,7 +513,7 @@ class GenSolvers extends Component {
                                   this.state.qsi_functions.length > 0 &&
                                   this.state.qsi_x >=
                                     this.state.qsi_data[0][0] &&
-                                  this.state.qsi_data <=
+                                  this.state.qsi_x <
                                     this.state.qsi_data[
                                       this.state.qsi_data.length - 1
                                     ][0]

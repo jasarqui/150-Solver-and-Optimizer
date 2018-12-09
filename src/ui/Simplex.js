@@ -158,7 +158,7 @@ class Simplex extends Component {
           var basic_solution = [];
           for (
             var i = 0;
-            i < result.data.result[iteration][0].length - 1;
+            i < result.data.result[iteration][0].length - 2;
             i++
           ) {
             var active = false;
@@ -855,9 +855,6 @@ class Simplex extends Component {
                                 </Table.HeaderCell>
                                 <Table.HeaderCell textAlign="center">
                                   Z
-                                </Table.HeaderCell>
-                                <Table.HeaderCell textAlign="center">
-                                  Solution
                                 </Table.HeaderCell>
                               </Table.Row>
                             </Table.Header>
