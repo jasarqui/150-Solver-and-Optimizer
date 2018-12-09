@@ -459,27 +459,38 @@ class GenSolvers extends Component {
                       <Segment style={styles.FunctionSegment}>
                         {this.state.qsi_functions.length > 0 ? (
                           <div>
-                            {this.state.qsi_functions.map((func, id) => {
-                              return (
-                                <p key={id}>
-                                  {"["}
-                                  {this.state.contents[id][0]}
-                                  {", "}
-                                  {this.state.contents[id + 1][0]}
-                                  {") => "}
-                                  {Math.round((func[0] + 0.00001) * 10000) /
-                                    10000}
-                                  {" * x"}
-                                  <sup>2</sup>
-                                  {" + "}
-                                  {Math.round((func[1] + 0.00001) * 10000) /
-                                    10000}
-                                  {" * x + "}
-                                  {Math.round((func[2] + 0.00001) * 10000) /
-                                    10000}
-                                </p>
-                              );
-                            })}
+                            <Table basic="very" celled collapsing>
+                              <Table.Body>
+                                {this.state.qsi_functions.map((func, id) => {
+                                  return (
+                                    <Table.Row key={id}>
+                                      <Table.Cell>
+                                        {"["}
+                                        {this.state.contents[id][0]}
+                                        {", "}
+                                        {this.state.contents[id + 1][0]}
+                                        {")"}
+                                      </Table.Cell>
+                                      <Table.Cell>
+                                        {Math.round(
+                                          (func[0] + 0.00001) * 10000
+                                        ) / 10000}
+                                        {" * x"}
+                                        <sup>2</sup>
+                                        {" + "}
+                                        {Math.round(
+                                          (func[1] + 0.00001) * 10000
+                                        ) / 10000}
+                                        {" * x + "}
+                                        {Math.round(
+                                          (func[2] + 0.00001) * 10000
+                                        ) / 10000}
+                                      </Table.Cell>
+                                    </Table.Row>
+                                  );
+                                })}
+                              </Table.Body>
+                            </Table>
                             <Input
                               labelPosition="right"
                               type="text"
