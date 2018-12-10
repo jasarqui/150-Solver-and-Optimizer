@@ -239,7 +239,7 @@ class GenSolvers extends Component {
       var result = reader_content.map(numbers => {
         return numbers.map(Number);
       });
-      console.log(result)
+      console.log(result);
 
       // sort content
       result.sort(sortFunction);
@@ -363,11 +363,10 @@ class GenSolvers extends Component {
                           />
                           <Button
                             disabled={
-                              this.state.contents.length > 0 &&
                               this.state.pr_degree <
                                 this.state.contents.length &&
-                              this.state.contents.length > 2 &&
-                              this.state.pr_degree > 1
+                              this.state.contents.length >= 2 &&
+                              this.state.pr_degree >= 1
                                 ? false
                                 : true
                             }
